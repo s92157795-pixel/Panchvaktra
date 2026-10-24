@@ -4,8 +4,7 @@
   "description": "Panchvaktra - Human Welfare Foundation",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js",
-    "build": "echo Build completed successfully"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
