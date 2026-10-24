@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Panchvaktra - Human Welfare Foundation",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node server.js"
   },
   "keywords": [],
   "author": "",
