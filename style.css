@@ -1526,31 +1526,6 @@ html, body {
   margin: 1.5rem auto 0 auto;
 }
 
-@media (max-width: 1024px) {
-  .kite-arena,
-  .pentagon-arena {
-    height: 960px;
-    margin-top: 1.25rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .kite-arena,
-  .pentagon-arena {
-    height: 720px;
-    max-width: 100%;
-    margin-top: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .kite-arena,
-  .pentagon-arena {
-    height: 600px;
-    margin-top: 0.5rem;
-  }
-}
-
 .kite-corner-card,
 .pentagon-corner-card {
   position: absolute;
@@ -1572,47 +1547,6 @@ html, body {
   box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.45), 0 0 15px rgba(16, 185, 129, 0.12);
   user-select: none;
   cursor: default;
-}
-
-@media (max-width: 1024px) {
-  .kite-corner-card,
-  .pentagon-corner-card {
-    width: 235px;
-    padding: 0.75rem;
-    border-radius: 1.25rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .kite-corner-card,
-  .pentagon-corner-card {
-    width: clamp(142px, 34vw, 175px);
-    padding: 0.55rem;
-    border-radius: 1.15rem;
-  }
-  .kite-corner-card > div:first-child,
-  .pentagon-corner-card > div:first-child {
-    height: clamp(115px, 26vw, 150px) !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .kite-corner-card,
-  .pentagon-corner-card {
-    width: clamp(124px, 33vw, 142px);
-    padding: 0.42rem;
-    border-radius: 0.95rem;
-  }
-  .kite-corner-card > div:first-child,
-  .pentagon-corner-card > div:first-child {
-    height: 105px !important;
-    border-radius: 0.75rem !important;
-  }
-  .kite-corner-card h4,
-  .pentagon-corner-card h4 {
-    font-size: 0.74rem !important;
-    line-height: 1.18 !important;
-  }
 }
 
 .kite-corner-card:hover,
@@ -1651,7 +1585,7 @@ html, body {
   object-position: center 32% !important;
 }
 
-/* 5 Pentagon Positions with Generous Gap Between Upper and Lower Tiers */
+/* 5 Pentagon Positions on PC Desktop (Generous Geometric Spacing - 100% Preserved) */
 /* Pos 0: Top Apex */
 .pentagon-pos-0,
 .kite-pos-0 {
@@ -1691,57 +1625,147 @@ html, body {
   z-index: 24;
 }
 
-@media (max-width: 768px) {
+/* ========================================================
+   Mobile & Tablet Responsive 3D Spotlight Carousel (< 1025px)
+   Elevates leadership cards to premium focal scale with zero overlapping mess
+   ======================================================== */
+@media (max-width: 1024px) {
+  .kite-arena,
+  .pentagon-arena {
+    height: 520px;
+    max-width: 580px;
+    margin: 0.75rem auto 0 auto;
+    overflow: hidden;
+    position: relative;
+    touch-action: pan-y;
+  }
+
+  .kite-corner-card,
+  .pentagon-corner-card {
+    position: absolute;
+    width: clamp(265px, 80vw, 320px);
+    max-width: 88vw;
+    padding: 0.85rem;
+    border-radius: 1.5rem;
+    background: rgba(3, 35, 27, 0.88);
+    border: 1.5px solid rgba(110, 231, 183, 0.35);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), 0 0 25px rgba(16, 185, 129, 0.2);
+    transition: top 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                left 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.35s ease,
+                filter 0.35s ease,
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+    will-change: top, left, transform, opacity;
+  }
+
+  /* Full-bleed high-definition photo box on mobile & tablet */
+  .kite-corner-card > div:first-child,
+  .pentagon-corner-card > div:first-child {
+    height: clamp(265px, 45vh, 320px) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Executive leadership name pill */
+  .kite-corner-card h4,
+  .pentagon-corner-card h4 {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    color: #064e3b !important;
+    letter-spacing: 0.025em !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Active Spotlight Card in Center */
   .pentagon-pos-0,
   .kite-pos-0 {
-    top: 12%;
-    left: 50%;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+    opacity: 1 !important;
+    z-index: 30 !important;
+    filter: none !important;
+    pointer-events: auto !important;
+    border-color: rgba(52, 211, 153, 0.9) !important;
+    box-shadow: 0 25px 55px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(52, 211, 153, 0.45) !important;
   }
+
+  /* Next Card Peeking from Right */
   .pentagon-pos-1,
   .kite-pos-1 {
-    top: 34%;
-    left: 79%;
+    top: 50% !important;
+    left: calc(100% - 15px) !important;
+    transform: translate(-50%, -50%) scale(0.82) !important;
+    opacity: 0.35 !important;
+    z-index: 15 !important;
+    filter: blur(1.5px) brightness(0.65) !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
   }
+
+  /* Previous Card Peeking from Left */
+  .pentagon-pos-4 {
+    top: 50% !important;
+    left: 15px !important;
+    transform: translate(-50%, -50%) scale(0.82) !important;
+    opacity: 0.35 !important;
+    z-index: 15 !important;
+    filter: blur(1.5px) brightness(0.65) !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+
+  /* Queued Offstage Cards */
   .pentagon-pos-2,
-  .kite-pos-2 {
-    top: 80%;
-    left: 71%;
-  }
+  .kite-pos-2,
   .pentagon-pos-3,
   .kite-pos-3 {
-    top: 80%;
-    left: 29%;
-  }
-  .pentagon-pos-4 {
-    top: 34%;
-    left: 21%;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(0.6) !important;
+    opacity: 0 !important;
+    z-index: 5 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }
 
 @media (max-width: 480px) {
-  .pentagon-pos-0,
-  .kite-pos-0 {
-    top: 11%;
-    left: 50%;
+  .kite-arena,
+  .pentagon-arena {
+    height: 480px;
+    margin-top: 0.4rem;
   }
+
+  .kite-corner-card,
+  .pentagon-corner-card {
+    width: clamp(255px, 84vw, 295px);
+    padding: 0.75rem;
+    border-radius: 1.35rem;
+  }
+
+  .kite-corner-card > div:first-child,
+  .pentagon-corner-card > div:first-child {
+    height: clamp(250px, 44vh, 290px) !important;
+    border-radius: 1.15rem !important;
+  }
+
+  .kite-corner-card h4,
+  .pentagon-corner-card h4 {
+    font-size: 0.88rem !important;
+  }
+
   .pentagon-pos-1,
   .kite-pos-1 {
-    top: 33%;
-    left: 77%;
+    left: calc(100% - 10px) !important;
   }
-  .pentagon-pos-2,
-  .kite-pos-2 {
-    top: 79%;
-    left: 70%;
-  }
-  .pentagon-pos-3,
-  .kite-pos-3 {
-    top: 79%;
-    left: 30%;
-  }
+
   .pentagon-pos-4 {
-    top: 33%;
-    left: 23%;
+    left: 10px !important;
   }
 }
 

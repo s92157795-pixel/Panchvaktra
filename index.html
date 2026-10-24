@@ -741,7 +741,7 @@
           <!-- Hidden anchor for legacy stats references -->
           <span id="stats" class="absolute -top-24 pointer-events-none"></span>
 
-          <div class="relative w-full min-h-[1340px] md:min-h-[1420px] bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] border border-emerald-500/50 rounded-3xl sm:rounded-[40px] shadow-[0_25px_60px_-15px_rgba(2,44,34,0.7),0_0_40px_rgba(16,185,129,0.18)] hover:shadow-2xl transition-all p-4 sm:p-6 md:p-8 flex flex-col items-center justify-start gap-4 sm:gap-6 overflow-hidden">
+          <div class="relative w-full min-h-[580px] sm:min-h-[640px] md:min-h-[700px] lg:min-h-[1420px] bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] border border-emerald-500/50 rounded-3xl sm:rounded-[40px] shadow-[0_25px_60px_-15px_rgba(2,44,34,0.7),0_0_40px_rgba(16,185,129,0.18)] hover:shadow-2xl transition-all p-4 sm:p-6 md:p-8 flex flex-col items-center justify-start gap-3 sm:gap-5 overflow-hidden">
             
             <!-- Ambient Glowing Lighting Blobs -->
             <div class="absolute -top-24 -left-24 w-80 h-80 sm:w-96 sm:h-96 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -749,7 +749,7 @@
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/12 rounded-full blur-3xl pointer-events-none"></div>
 
             <!-- Header: OUR TEAM (Executive Leadership Badge & Radiant Wingline Design) -->
-            <div class="flex flex-col items-center text-center z-20 mb-3 sm:mb-5">
+            <div class="flex flex-col items-center text-center z-20 mb-2 sm:mb-4">
               <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-900/60 border border-emerald-400/50 text-emerald-300 text-[11px] sm:text-xs font-black uppercase tracking-widest shadow-md backdrop-blur-md mb-2">
                 <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -769,11 +769,11 @@
               </div>
             </div>
 
-            <!-- Pentagon Formation Arena (With Extra Top Margin and Clearance) -->
-            <div id="team-kite-arena" class="kite-arena pentagon-arena z-20 mt-4 sm:mt-6 md:mt-8">
+            <!-- Pentagon Formation Arena (Desktop 5-Point Geometry | Mobile 3D Spotlight Carousel) -->
+            <div id="team-kite-arena" class="kite-arena pentagon-arena z-20 mt-2 sm:mt-4 md:mt-8">
 
-              <!-- Decorative Pentagon Outline & Radial Spokes in SVG (Visible on md+) -->
-              <svg class="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 1060 1160" fill="none" preserveAspectRatio="none">
+              <!-- Decorative Pentagon Outline & Radial Spokes in SVG (Visible on lg+ PC screens) -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none hidden lg:block" viewBox="0 0 1060 1160" fill="none" preserveAspectRatio="none">
                 <!-- Pentagon Outer Perimeter matching safe tier clearance coordinates -->
                 <polygon points="530,174 906,418 742,963 318,963 154,418" stroke="rgba(110, 231, 183, 0.45)" stroke-width="2.5" stroke-dasharray="6,6" />
                 <!-- Pentagon Radial Spokes from Center Hub to Each Vertex -->
@@ -786,13 +786,13 @@
                 <circle cx="530" cy="580" r="58" fill="none" stroke="rgba(52, 211, 153, 0.45)" stroke-width="2" stroke-dasharray="3,3" />
               </svg>
 
-              <!-- Central Pentagon Hub Badge -->
-              <div class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-emerald-950 to-emerald-900 border-2 border-emerald-400 shadow-[0_0_35px_rgba(52,211,153,0.55)] flex flex-col items-center justify-center text-center p-2 z-20 hover:scale-110 transition-transform select-none">
+              <!-- Central Pentagon Hub Badge (Desktop lg+ only) -->
+              <div class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-emerald-950 to-emerald-900 border-2 border-emerald-400 shadow-[0_0_35px_rgba(52,211,153,0.55)] flex flex-col items-center justify-center text-center p-2 z-20 hover:scale-110 transition-transform select-none hidden lg:flex">
                 <img src="logos/ngo_watermark.png" alt="Panchvaktra Emblem" class="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow" />
                 <span class="text-[7.5px] sm:text-[8px] font-black uppercase tracking-wider text-emerald-300 mt-0.5">Core Team</span>
               </div>
 
-              <!-- 1. Team Card 1 (Starts at Pos 0: Top Apex with Generous Heading Margin) -->
+              <!-- 1. Team Card 1 (Starts at Pos 0: Top Apex on PC | Spotlight Center on Mobile) -->
               <div id="team-card-1" class="kite-corner-card pentagon-corner-card pentagon-pos-0 group flex flex-col gap-2.5">
                 <!-- Big Photo Box 1 -->
                 <div class="w-full h-52 sm:h-56 md:h-60 bg-emerald-950/80 border border-white/20 group-hover:border-emerald-300 rounded-2xl sm:rounded-3xl overflow-hidden relative shadow-inner transition-colors">
@@ -805,7 +805,7 @@
                 </div>
               </div>
 
-              <!-- 2. Team Card 2 (Starts at Pos 1: Upper Right) -->
+              <!-- 2. Team Card 2 (Starts at Pos 1: Upper Right on PC | Peeking Right on Mobile) -->
               <div id="team-card-2" class="kite-corner-card pentagon-corner-card pentagon-pos-1 group flex flex-col gap-2.5">
                 <!-- Big Photo Box 2 -->
                 <div class="w-full h-52 sm:h-56 md:h-60 bg-emerald-950/80 border border-white/20 group-hover:border-emerald-300 rounded-2xl sm:rounded-3xl overflow-hidden relative shadow-inner transition-colors">
@@ -818,7 +818,7 @@
                 </div>
               </div>
 
-              <!-- 3. Team Card 3 (Starts at Pos 2: Lower Right) -->
+              <!-- 3. Team Card 3 (Starts at Pos 2: Lower Right on PC | Staged Offscreen on Mobile) -->
               <div id="team-card-3" class="kite-corner-card pentagon-corner-card pentagon-pos-2 group flex flex-col gap-2.5">
                 <!-- Big Photo Box 3 -->
                 <div class="w-full h-52 sm:h-56 md:h-60 bg-emerald-950/80 border border-white/20 group-hover:border-emerald-300 rounded-2xl sm:rounded-3xl overflow-hidden relative shadow-inner transition-colors">
@@ -831,7 +831,7 @@
                 </div>
               </div>
 
-              <!-- 4. Team Card 4 (Starts at Pos 3: Lower Left) -->
+              <!-- 4. Team Card 4 (Starts at Pos 3: Lower Left on PC | Staged Offscreen on Mobile) -->
               <div id="team-card-4" class="kite-corner-card pentagon-corner-card pentagon-pos-3 group flex flex-col gap-2.5">
                 <!-- Big Photo Box 4 -->
                 <div class="w-full h-52 sm:h-56 md:h-60 bg-emerald-950/80 border border-white/20 group-hover:border-emerald-300 rounded-2xl sm:rounded-3xl overflow-hidden relative shadow-inner transition-colors">
@@ -844,7 +844,7 @@
                 </div>
               </div>
 
-              <!-- 5. Team Card 5 (Starts at Pos 4: Upper Left) -->
+              <!-- 5. Team Card 5 (Starts at Pos 4: Upper Left on PC | Peeking Left on Mobile) -->
               <div id="team-card-5" class="kite-corner-card pentagon-corner-card pentagon-pos-4 group flex flex-col gap-2.5">
                 <!-- Big Photo Box 5 -->
                 <div class="w-full h-52 sm:h-56 md:h-60 bg-emerald-950/80 border border-white/20 group-hover:border-emerald-300 rounded-2xl sm:rounded-3xl overflow-hidden relative shadow-inner transition-colors">
@@ -859,19 +859,58 @@
 
             </div>
 
-            <!-- Dynamic Motion Controller Script (0.3s Motion, Pause on Hover, Resume on Leave) -->
+            <!-- Mobile / Tablet Leadership Navigation Bar (Visible on < lg screens) -->
+            <div class="flex lg:hidden items-center justify-between w-full max-w-xs sm:max-w-sm px-4 mt-2 sm:mt-3 z-30 select-none">
+              <!-- Prev Button -->
+              <button id="team-prev-btn" type="button" aria-label="Previous Team Member" class="p-2 sm:p-2.5 rounded-full bg-emerald-950/80 hover:bg-emerald-900 active:scale-90 border border-emerald-400/50 text-emerald-300 shadow-md transition-all">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <!-- 5 Interactive Pagination Indicator Dots -->
+              <div class="flex items-center gap-2" id="team-dots-container">
+                <button type="button" class="team-dot w-6 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] transition-all" data-index="0" aria-label="Go to Ambuj Bharadwaj"></button>
+                <button type="button" class="team-dot w-2 h-2 rounded-full bg-emerald-800/80 hover:bg-emerald-600 transition-all" data-index="1" aria-label="Go to Anant Kiran"></button>
+                <button type="button" class="team-dot w-2 h-2 rounded-full bg-emerald-800/80 hover:bg-emerald-600 transition-all" data-index="2" aria-label="Go to Sandhya Kumari"></button>
+                <button type="button" class="team-dot w-2 h-2 rounded-full bg-emerald-800/80 hover:bg-emerald-600 transition-all" data-index="3" aria-label="Go to Jyoti Kumari"></button>
+                <button type="button" class="team-dot w-2 h-2 rounded-full bg-emerald-800/80 hover:bg-emerald-600 transition-all" data-index="4" aria-label="Go to Hari Om Choudhary"></button>
+              </div>
+
+              <!-- Next Button -->
+              <button id="team-next-btn" type="button" aria-label="Next Team Member" class="p-2 sm:p-2.5 rounded-full bg-emerald-950/80 hover:bg-emerald-900 active:scale-90 border border-emerald-400/50 text-emerald-300 shadow-md transition-all">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Dynamic Motion Controller Script (Smooth Motion, Gestures, Pause on Hover, Navigation) -->
             <script>
               (function() {
                 const cardIds = ['team-card-1', 'team-card-2', 'team-card-3', 'team-card-4', 'team-card-5'];
                 const cards = cardIds.map(id => document.getElementById(id)).filter(Boolean);
                 const arena = document.getElementById('team-kite-arena');
+                const prevBtn = document.getElementById('team-prev-btn');
+                const nextBtn = document.getElementById('team-next-btn');
+                const dots = document.querySelectorAll('.team-dot');
 
                 if (cards.length < 5) return;
 
                 let currentStep = 0;
                 let timer = null;
                 let isHovered = false;
-                const STEP_INTERVAL = 2300; // 2.3 seconds display interval with 0.3s smooth glide
+                const STEP_INTERVAL = 2300; // 2.3 seconds display interval with 0.35s smooth glide
+
+                function updateDots(activeIdx) {
+                  dots.forEach((dot, idx) => {
+                    if (idx === activeIdx) {
+                      dot.className = 'team-dot w-6 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] transition-all';
+                    } else {
+                      dot.className = 'team-dot w-2 h-2 rounded-full bg-emerald-800/80 hover:bg-emerald-600 transition-all';
+                    }
+                  });
+                }
 
                 function setCardPositions(step) {
                   cards.forEach((card, idx) => {
@@ -882,10 +921,19 @@
                     );
                     card.classList.add('pentagon-pos-' + pos);
                   });
+
+                  // Update active indicator dot (0..4)
+                  const activeCardIndex = (5 - (step % 5)) % 5;
+                  updateDots(activeCardIndex);
                 }
 
                 function nextStep() {
                   currentStep = (currentStep + 4) % 5; // Anticlockwise progression: 0 -> 4 -> 3 -> 2 -> 1 -> 0
+                  setCardPositions(currentStep);
+                }
+
+                function prevStep() {
+                  currentStep = (currentStep + 1) % 5;
                   setCardPositions(currentStep);
                 }
 
@@ -902,7 +950,7 @@
                   }
                 }
 
-                // Hover listeners on each card: motion stops immediately on hover, starts after removing hover
+                // Hover listeners on cards
                 cards.forEach(card => {
                   card.addEventListener('mouseenter', () => {
                     isHovered = true;
@@ -912,10 +960,21 @@
                     isHovered = false;
                     startLoop();
                   });
-                  card.addEventListener('touchstart', () => {
-                    isHovered = true;
-                    stopLoop();
-                  }, { passive: true });
+
+                  // On mobile/tablet: tapping peeking cards advances carousel
+                  card.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                      if (card.classList.contains('pentagon-pos-1')) {
+                        nextStep();
+                        stopLoop();
+                        startLoop();
+                      } else if (card.classList.contains('pentagon-pos-4')) {
+                        prevStep();
+                        stopLoop();
+                        startLoop();
+                      }
+                    }
+                  });
                 });
 
                 if (arena) {
@@ -923,7 +982,62 @@
                     isHovered = false;
                     startLoop();
                   });
+
+                  // Mobile Touch Swipe Navigation
+                  let touchStartX = 0;
+                  let touchStartY = 0;
+                  arena.addEventListener('touchstart', (e) => {
+                    if (e.touches && e.touches.length === 1) {
+                      touchStartX = e.touches[0].clientX;
+                      touchStartY = e.touches[0].clientY;
+                    }
+                    isHovered = true;
+                    stopLoop();
+                  }, { passive: true });
+
+                  arena.addEventListener('touchend', (e) => {
+                    if (e.changedTouches && e.changedTouches.length === 1) {
+                      const diffX = e.changedTouches[0].clientX - touchStartX;
+                      const diffY = e.changedTouches[0].clientY - touchStartY;
+                      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+                        if (diffX < 0) {
+                          nextStep();
+                        } else {
+                          prevStep();
+                        }
+                      }
+                    }
+                    isHovered = false;
+                    startLoop();
+                  }, { passive: true });
                 }
+
+                // Prev / Next button click handlers
+                if (prevBtn) {
+                  prevBtn.addEventListener('click', () => {
+                    prevStep();
+                    stopLoop();
+                    startLoop();
+                  });
+                }
+                if (nextBtn) {
+                  nextBtn.addEventListener('click', () => {
+                    nextStep();
+                    stopLoop();
+                    startLoop();
+                  });
+                }
+
+                // Dots click handlers
+                dots.forEach(dot => {
+                  dot.addEventListener('click', () => {
+                    const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
+                    currentStep = (5 - targetIdx) % 5;
+                    setCardPositions(currentStep);
+                    stopLoop();
+                    startLoop();
+                  });
+                });
 
                 // Initialize positions & begin loop
                 setCardPositions(0);
