@@ -2,12 +2,13 @@
   "name": "panchvaktra",
   "version": "1.0.0",
   "description": "Panchvaktra - Human Welfare Foundation",
-  "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "echo Build completed successfully"
   },
   "keywords": [],
   "author": "",
   "license": "ISC"
 }
+

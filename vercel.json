@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -26,7 +27,7 @@
     },
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/api"
     },
     {
       "source": "/(ngo_watermark.png|logo.png|logo_emblem.png|logo_full.png|logo_icon.png|logo_original.jpg)",

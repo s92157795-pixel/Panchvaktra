@@ -177,7 +177,14 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running with backend API at http://localhost:${PORT}/`);
-  console.log(`Admin portal available at http://localhost:${PORT}/admin`);
-});
+// Export HTTP server instance for Vercel/serverless environments
+module.exports = server;
+
+// Only bind to local port when running directly as a script (node server.js)
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Server running with backend API at http://localhost:${PORT}/`);
+    console.log(`Admin portal available at http://localhost:${PORT}/admin`);
+  });
+}
+

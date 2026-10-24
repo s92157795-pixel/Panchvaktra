@@ -11,12 +11,16 @@ module.exports = async (req, res) => {
   try {
     const handled = await handleApiRequest(req, res);
     if (!handled) {
-      res.writeHead(404, SECURITY_HEADERS);
+      if (!res.headersSent) {
+        res.writeHead(404, SECURITY_HEADERS);
+      }
       res.end(JSON.stringify({ success: false, error: 'Endpoint Not Found' }));
     }
   } catch (err) {
     console.error('[VERCEL API ERROR]', err);
-    res.writeHead(500, SECURITY_HEADERS);
+    if (!res.headersSent) {
+      res.writeHead(500, SECURITY_HEADERS);
+    }
     res.end(JSON.stringify({ success: false, error: 'Internal Server Error' }));
   }
 };

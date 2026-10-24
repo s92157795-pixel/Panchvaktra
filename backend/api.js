@@ -15,7 +15,10 @@ const {
   isAuthenticated
 } = require('./auth');
 
-const DATA_FILE = path.join(__dirname, '..', 'data', 'submissions.json');
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
+const DATA_FILE = isServerless
+  ? path.join('/tmp', 'panchvaktra-submissions.json')
+  : path.join(__dirname, '..', 'data', 'submissions.json');
 
 // Helper to determine client IP for rate limiting
 function getClientIp(req) {
@@ -26,32 +29,43 @@ function getClientIp(req) {
   return req.socket.remoteAddress || '127.0.0.1';
 }
 
-// Ensure data file and directory exist
+// Ensure data file and directory exist safely
 function ensureDataFile() {
-  const dir = path.dirname(DATA_FILE);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
+  try {
+    const dir = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dir)) {
+      try {
+        fs.mkdirSync(dir, { recursive: true });
+      } catch (e) {}
+    }
+    if (!fs.existsSync(DATA_FILE)) {
+      try {
+        fs.writeFileSync(DATA_FILE, '[]', 'utf8');
+      } catch (e) {}
+    }
+  } catch (err) {
+    // Non-fatal on serverless read-only filesystem
   }
 }
 
 let inMemorySubmissions = null;
 
-// Read submissions safely
+// Read submissions safely with fallback
 async function readSubmissions() {
+  if (inMemorySubmissions !== null) return inMemorySubmissions;
   ensureDataFile();
   try {
-    const raw = await fs.promises.readFile(DATA_FILE, 'utf8');
-    const parsed = JSON.parse(raw || '[]');
-    inMemorySubmissions = parsed;
-    return parsed;
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = await fs.promises.readFile(DATA_FILE, 'utf8');
+      const parsed = JSON.parse(raw || '[]');
+      inMemorySubmissions = parsed;
+      return parsed;
+    }
   } catch (err) {
-    if (inMemorySubmissions !== null) return inMemorySubmissions;
-    console.error('Error reading submissions:', err.message);
-    return [];
+    console.warn('[BACKEND WARN] Error reading submissions file:', err.message);
   }
+  inMemorySubmissions = [];
+  return inMemorySubmissions;
 }
 
 // Write submissions safely (atomic write via temp file with memory fallback)
@@ -130,9 +144,24 @@ function cleanStr(str, maxLen = 5000) {
  * Returns true if the request was handled, false otherwise
  */
 async function handleApiRequest(req, res) {
-  const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = urlObj.pathname;
+  // Support direct local requests as well as Vercel/proxy rewrites
+  const rawUrl =
+    req.headers['x-vercel-original-path'] ||
+    req.headers['x-matched-path'] ||
+    req.headers['x-forwarded-uri'] ||
+    req.url;
+
+  const urlObj = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
+  let pathname = urlObj.pathname;
   const method = req.method.toUpperCase();
+
+  // If Vercel passed target path via query string
+  if (pathname === '/api' || pathname === '/api/') {
+    const queryPath = urlObj.searchParams.get('path');
+    if (queryPath) {
+      pathname = queryPath.startsWith('/') ? queryPath : `/${queryPath}`;
+    }
+  }
 
   // Handle CORS preflight
   if (method === 'OPTIONS') {
@@ -143,6 +172,18 @@ async function handleApiRequest(req, res) {
       'Access-Control-Max-Age': '86400'
     });
     res.end();
+    return true;
+  }
+
+  // Root /api endpoint returns healthy service status
+  if (pathname === '/api' || pathname === '/api/') {
+    sendJson(res, 200, {
+      success: true,
+      service: 'Panchvaktra Backend Service',
+      status: 'healthy',
+      uptimeSeconds: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString()
+    });
     return true;
   }
 
