@@ -32,4 +32,5 @@ Thumbs.db
 *.tar.gz
 scratch/
 econest_temp/
+push_to_github.bat
 

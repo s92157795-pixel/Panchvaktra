@@ -177,8 +177,11 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-// Export HTTP server instance for Vercel/serverless environments
-module.exports = server;
+// Export HTTP request listener function for Vercel/serverless environments
+module.exports = (req, res) => {
+  server.emit('request', req, res);
+};
+
 
 // Only bind to local port when running directly as a script (node server.js)
 if (require.main === module) {

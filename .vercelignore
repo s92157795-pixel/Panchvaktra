@@ -8,3 +8,5 @@ data/auth.json
 .git
 .agents
 scratch/
+server.js
+push_to_github.bat
