@@ -1,0 +1,10 @@
+# Prevent sensitive owner credentials, database, and archive leaks on Vercel
+OWNER_CREDENTIALS.txt
+SECURE_CREDENTIALS.txt
+data/auth.json
+*.zip
+*.tmp
+.env*
+.git
+.agents
+scratch/

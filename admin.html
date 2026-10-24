@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panchvaktra Foundation - Owner Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after, html, body, button, input, optgroup, select, textarea {
+      font-family: sans-serif !important;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.4); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.7); }
+  </style>
+  <link rel="icon" type="image/png" href="logos/ngo_watermark.png">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- ============================================== -->
+  <!-- 1. OWNER LOGIN VIEW (Shown when unauthenticated) -->
+  <!-- ============================================== -->
+  <div id="login-view" class="flex-1 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900/90 border border-emerald-600/50 rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_35px_rgba(16,185,129,0.15)] backdrop-blur-xl space-y-6 text-center">
+      
+      <!-- Emblem & Title -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="relative">
+          <img src="logos/ngo_watermark.png" alt="Emblem" class="h-16 w-16 object-contain drop-shadow-md">
+          <span class="absolute -bottom-1 -right-1 bg-emerald-500 text-slate-950 p-1 rounded-full shadow">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          </span>
+        </div>
+        <div>
+          <h1 class="text-xl font-black text-white tracking-tight">Owner Portal Access</h1>
+          <p class="text-xs text-slate-400 mt-1">This area contains confidential donor, volunteer, and personal contact submissions.</p>
+        </div>
+      </div>
+
+      <!-- Attempts Status & Policy Banner -->
+      <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>Max 3 Login Attempts</span>
+        </span>
+        <span id="remaining-attempts-badge" class="px-2 py-0.5 rounded-full bg-emerald-900/50 border border-emerald-500/40 text-emerald-300 font-bold text-[10px]">3 Tries Remaining</span>
+      </div>
+
+      <!-- Error / Lockout Alert -->
+      <div id="login-error" class="hidden bg-rose-950/90 border border-rose-600/70 text-rose-200 text-xs font-bold py-2.5 px-3 rounded-xl text-center space-y-1">
+      </div>
+
+      <!-- Reset Success Alert -->
+      <div id="login-success" class="hidden bg-emerald-950/90 border border-emerald-500/70 text-emerald-200 text-xs font-bold py-2.5 px-3 rounded-xl text-center">
+      </div>
+
+      <!-- Login Form -->
+      <form id="owner-login-form" class="space-y-4 text-left">
+        <div>
+          <label class="block text-[11px] font-black uppercase tracking-wider text-slate-300 mb-1.5">Owner Master Password</label>
+          <div class="relative">
+            <input id="owner-password-input" type="password" required placeholder="Enter owner password" class="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl px-3.5 py-3 pr-10 focus:outline-none focus:border-emerald-400 transition placeholder-slate-600">
+            <button type="button" onclick="togglePasswordVisibility('owner-password-input', this)" class="absolute right-3 top-3 text-slate-400 hover:text-white" title="Toggle Visibility">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            </button>
+          </div>
+          <!-- Forgot Password & Refresh Policy Links -->
+          <div class="flex items-center justify-between text-xs pt-1.5">
+            <button type="button" onclick="openForgotPasswordModal()" class="text-emerald-400 hover:text-emerald-300 font-bold hover:underline transition flex items-center gap-1 cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+              <span>Forgot Password?</span>
+            </button>
+            <span class="text-slate-500 text-[10.5px]">Auto-locks on refresh/cut</span>
+          </div>
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 transform active:scale-[0.99] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          Sign In to Owner Console
+        </button>
+      </form>
+
+      <!-- Security Notice -->
+      <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-500 flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        <span>Protected with 3-attempt lockout &amp; strict in-memory tokens.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 2. OWNER DASHBOARD VIEW (Shown only when authenticated) -->
+  <!-- ============================================== -->
+  <div id="dashboard-view" class="hidden flex-col min-h-screen">
+    
+    <!-- Top Bar -->
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-emerald-900/50 shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="logos/ngo_watermark.png" alt="Emblem" class="h-9 w-9 object-contain">
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-base sm:text-lg font-black text-white tracking-tight leading-none">Panchvaktra Admin</h1>
+              <span class="text-[9.5px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Owner Mode
+              </span>
+            </div>
+            <span class="text-[9.5px] text-emerald-400/80 font-bold tracking-wider uppercase">Confidential Human Welfare Submissions</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="/" target="_blank" class="text-xs font-bold text-slate-300 hover:text-white px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition flex items-center gap-1.5 border border-slate-700">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            <span class="hidden sm:inline">View Site</span>
+          </a>
+          <button onclick="downloadExport()" class="text-xs font-bold text-emerald-950 bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>CSV</span>
+          </button>
+          <button onclick="openChangePasswordModal()" class="text-xs font-bold text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" title="Change Password">
+            🔑
+          </button>
+          <button onclick="logoutOwner()" class="text-xs font-bold text-rose-300 hover:text-rose-100 px-3 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 transition flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span>Lock</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+      <!-- KPI / Stats Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Entries</span>
+          <div class="flex items-baseline justify-between mt-2">
+            <span id="stat-total" class="text-3xl font-black text-white">0</span>
+            <span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">All-time</span>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Inquiries</span>
+          <div class="flex items-baseline justify-between mt-2">
+            <span id="stat-contacts" class="text-3xl font-black text-emerald-400">0</span>
+            <span class="text-xs text-slate-400 font-semibold">Messages</span>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Volunteers</span>
+          <div class="flex items-baseline justify-between mt-2">
+            <span id="stat-volunteers" class="text-3xl font-black text-amber-400">0</span>
+            <span class="text-xs text-slate-400 font-semibold">Applicants</span>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pledges / Donors</span>
+          <div class="flex items-baseline justify-between mt-2">
+            <span id="stat-donations" class="text-3xl font-black text-rose-400">0</span>
+            <span class="text-xs text-slate-400 font-semibold">Support</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div class="bg-slate-800/90 border border-slate-700/90 rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
+        
+        <!-- Type Filter Buttons -->
+        <div class="flex flex-wrap items-center gap-2" id="filter-buttons">
+          <button data-type="all" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-500 text-slate-950 shadow-xs">All</button>
+          <button data-type="contact" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-700">Inquiries</button>
+          <button data-type="volunteer" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-700">Volunteers</button>
+          <button data-type="donation" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-700">Donations</button>
+          <button data-type="newsletter" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-700">Subscribers</button>
+        </div>
+
+        <!-- Search & Refresh -->
+        <div class="flex items-center gap-2.5">
+          <div class="relative flex-1 sm:w-64">
+            <input id="search-input" type="text" placeholder="Search by name, email, message..." class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl px-3 py-2 pl-8 focus:outline-none focus:border-emerald-500 transition">
+            <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+          <button id="refresh-btn" title="Refresh" class="p-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Table of Submissions -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase text-[10px] font-extrabold tracking-wider border-b border-slate-700">
+              <tr>
+                <th class="py-3 px-4">Date</th>
+                <th class="py-3 px-4">Type</th>
+                <th class="py-3 px-4">Sender / Applicant</th>
+                <th class="py-3 px-4">Subject / Details</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="submissions-tbody" class="divide-y divide-slate-700/60">
+              <tr>
+                <td colspan="6" class="py-10 text-center text-slate-400">Loading submissions...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal for Submission Detail -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-emerald-700/60 rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 id="modal-title" class="text-base font-extrabold text-white">Submission Details</h3>
+          <span id="modal-date" class="text-xs text-slate-400 font-medium"></span>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+      <div id="modal-content" class="space-y-3 text-xs leading-relaxed text-slate-200"></div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button onclick="closeModal()" class="px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Change Password -->
+  <div id="password-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-emerald-700/60 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-white">Change Owner Password</h3>
+          <span class="text-xs text-slate-400">Update the master key for this console</span>
+        </div>
+        <button onclick="closePasswordModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+
+      <div id="password-modal-error" class="hidden bg-rose-950/80 border border-rose-600/70 text-rose-200 text-xs font-bold py-2 px-3 rounded-xl text-center"></div>
+
+      <form id="change-password-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Current Password *</label>
+          <input id="current-password" type="password" required class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-400">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">New Password (Min 8 characters) *</label>
+          <input id="new-password" type="password" required minlength="8" class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-400">
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="closePasswordModal()" class="px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for Forgot Password / Reset with Master Recovery Key -->
+  <div id="forgot-password-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-emerald-500/70 rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-4 shadow-2xl relative text-left">
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-black">🔑</div>
+          <div>
+            <h3 class="text-base font-extrabold text-white">Owner Password Recovery</h3>
+            <span class="text-xs text-slate-400">Reset master password &amp; unlock console</span>
+          </div>
+        </div>
+        <button onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-white p-1 rounded-lg text-lg">✕</button>
+      </div>
+
+      <div id="forgot-modal-error" class="hidden bg-rose-950/90 border border-rose-600/70 text-rose-200 text-xs font-bold py-2.5 px-3 rounded-xl text-center"></div>
+      <div id="forgot-modal-success" class="hidden bg-emerald-950/90 border border-emerald-500/70 text-emerald-200 text-xs font-bold py-2.5 px-3 rounded-xl text-center"></div>
+
+      <form id="forgot-password-form" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Master Recovery Key *</label>
+          <input id="recovery-key-input" type="text" required placeholder="Enter Master Recovery Key" class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-emerald-400 font-mono text-xs">
+          <p class="text-[10.5px] text-slate-400 mt-1">Default owner master recovery key: <code class="text-emerald-400 font-mono font-bold">PV-OWNER-MASTER-2026</code></p>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">New Owner Password (Min 8 characters) *</label>
+          <input id="recovery-new-password" type="password" required minlength="8" placeholder="Enter new owner password" class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-emerald-400 text-xs">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Confirm New Password *</label>
+          <input id="recovery-confirm-password" type="password" required minlength="8" placeholder="Confirm new password" class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-emerald-400 text-xs">
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="closeForgotPasswordModal()" class="px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer">Cancel</button>
+          <button type="submit" id="forgot-submit-btn" class="px-4 py-2 text-xs font-black rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 cursor-pointer">Reset &amp; Unlock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let submissions = [];
+    // Strict in-memory session: Never persisted across reloads or tab closures
+    let authToken = '';
+    let lockoutTimerInterval = null;
+
+    // Auth Headers Helper
+    function getAuthHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+      return headers;
+    }
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.classList.add('text-emerald-400');
+      } else {
+        input.type = 'password';
+        btn.classList.remove('text-emerald-400');
+      }
+    }
+
+    // Check login rate limiting & lockout status from server
+    async function checkLoginStatus() {
+      try {
+        const res = await fetch('/api/auth/login-status');
+        const data = await res.json();
+        if (data.success) {
+          updateAttemptUI(data);
+        }
+      } catch (err) {}
+    }
+
+    function updateAttemptUI(status) {
+      const badge = document.getElementById('remaining-attempts-badge');
+      const passwordInput = document.getElementById('owner-password-input');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      if (status.locked) {
+        if (badge) {
+          badge.textContent = 'Locked (0 Tries)';
+          badge.className = 'px-2 py-0.5 rounded-full bg-rose-900/60 border border-rose-500/50 text-rose-300 font-bold text-[10px]';
+        }
+        if (passwordInput) passwordInput.disabled = true;
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        startLockoutTimer(status.lockoutRemainingSecs || 300);
+      } else {
+        if (lockoutTimerInterval) {
+          clearInterval(lockoutTimerInterval);
+          lockoutTimerInterval = null;
+        }
+        if (passwordInput) passwordInput.disabled = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        const remaining = status.remainingTries !== undefined ? status.remainingTries : 3;
+        if (badge) {
+          badge.textContent = `${remaining} ${remaining === 1 ? 'Try' : 'Tries'} Remaining`;
+          badge.className = remaining <= 1
+            ? 'px-2 py-0.5 rounded-full bg-amber-900/60 border border-amber-500/50 text-amber-300 font-bold text-[10px]'
+            : 'px-2 py-0.5 rounded-full bg-emerald-900/50 border border-emerald-500/40 text-emerald-300 font-bold text-[10px]';
+        }
+      }
+    }
+
+    function startLockoutTimer(seconds) {
+      if (lockoutTimerInterval) clearInterval(lockoutTimerInterval);
+      let remaining = seconds;
+      const errBox = document.getElementById('login-error');
+      
+      const renderTimer = () => {
+        if (remaining <= 0) {
+          clearInterval(lockoutTimerInterval);
+          lockoutTimerInterval = null;
+          errBox.classList.add('hidden');
+          checkLoginStatus();
+          return;
+        }
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        const timeFormatted = `${m}m ${s < 10 ? '0' : ''}${s}s`;
+        errBox.innerHTML = `
+          <div>🚨 Account locked due to 3 failed attempts.</div>
+          <div class="text-[11px] text-rose-300 font-mono mt-1">Unlock timer: <span class="font-bold underline">${timeFormatted}</span></div>
+          <div class="mt-2 pt-1.5 border-t border-rose-800/80 text-[11px]">
+            Owner forgot password? <button type="button" onclick="openForgotPasswordModal()" class="text-amber-300 hover:text-white underline font-bold cursor-pointer">Use Forgot Password</button>
+          </div>
+        `;
+        errBox.classList.remove('hidden');
+        remaining--;
+      };
+
+      renderTimer();
+      lockoutTimerInterval = setInterval(renderTimer, 1000);
+    }
+
+    // Forgot Password Modal functions
+    function openForgotPasswordModal() {
+      document.getElementById('forgot-password-form').reset();
+      document.getElementById('forgot-modal-error').classList.add('hidden');
+      document.getElementById('forgot-modal-success').classList.add('hidden');
+      document.getElementById('forgot-password-modal').classList.remove('hidden');
+      document.getElementById('forgot-password-modal').classList.add('flex');
+    }
+
+    function closeForgotPasswordModal() {
+      document.getElementById('forgot-password-modal').classList.add('hidden');
+      document.getElementById('forgot-password-modal').classList.remove('flex');
+    }
+
+    document.getElementById('forgot-password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const recoveryKey = document.getElementById('recovery-key-input').value.trim();
+      const newPassword = document.getElementById('recovery-new-password').value;
+      const confirmPassword = document.getElementById('recovery-confirm-password').value;
+      const errBox = document.getElementById('forgot-modal-error');
+      const successBox = document.getElementById('forgot-modal-success');
+      const submitBtn = document.getElementById('forgot-submit-btn');
+
+      errBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+
+      if (newPassword !== confirmPassword) {
+        errBox.textContent = 'New password and confirm password do not match.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+      if (newPassword.length < 8) {
+        errBox.textContent = 'New password must be at least 8 characters.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Resetting...';
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recoveryKey, newPassword })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          successBox.textContent = data.message || 'Password successfully reset! Lockout cleared.';
+          successBox.classList.remove('hidden');
+          
+          if (lockoutTimerInterval) {
+            clearInterval(lockoutTimerInterval);
+            lockoutTimerInterval = null;
+          }
+          document.getElementById('login-error').classList.add('hidden');
+          
+          setTimeout(() => {
+            closeForgotPasswordModal();
+            const loginSuccess = document.getElementById('login-success');
+            loginSuccess.textContent = 'Password reset successfully! Please sign in with your new password.';
+            loginSuccess.classList.remove('hidden');
+            checkLoginStatus();
+            const pwdInput = document.getElementById('owner-password-input');
+            if (pwdInput) {
+              pwdInput.disabled = false;
+              pwdInput.value = '';
+              pwdInput.focus();
+            }
+          }, 1200);
+        } else {
+          errBox.textContent = data.error || 'Password reset failed.';
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.textContent = 'Server connection error. Please try again.';
+        errBox.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Reset & Unlock';
+      }
+    });
+
+    function showLogin() {
+      authToken = '';
+      document.getElementById('login-view').classList.remove('hidden');
+      document.getElementById('login-view').classList.add('flex');
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('flex');
+      checkLoginStatus();
+    }
+
+    function showDashboard() {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('flex');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+      document.getElementById('dashboard-view').classList.add('flex');
+      loadStats();
+      loadSubmissions();
+    }
+
+    // Handle Login Form Submission
+    document.getElementById('owner-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const passwordInput = document.getElementById('owner-password-input');
+      const errorDiv = document.getElementById('login-error');
+      const successDiv = document.getElementById('login-success');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Verifying owner key...';
+      errorDiv.classList.add('hidden');
+      if (successDiv) successDiv.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: passwordInput.value })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success && data.token) {
+          // Strictly keep token in-memory variable (reloads will lock immediately)
+          authToken = data.token;
+          passwordInput.value = '';
+          showDashboard();
+        } else if (res.status === 429 || data.locked) {
+          updateAttemptUI({ locked: true, lockoutRemainingSecs: data.lockoutRemainingSecs || 300 });
+        } else {
+          const remaining = data.remainingTries !== undefined ? data.remainingTries : 2;
+          updateAttemptUI({ locked: false, remainingTries: remaining });
+          errorDiv.innerHTML = `
+            <div>${data.error || 'Incorrect owner password.'}</div>
+            <div class="text-[11px] text-amber-300 font-normal mt-1">Forgot password? Click <button type="button" onclick="openForgotPasswordModal()" class="underline font-bold">here to reset</button>.</div>
+          `;
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Server connection error. Please try again.';
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+
+    // Handle Logout
+    async function logoutOwner() {
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: getAuthHeaders()
+        });
+      } catch (err) {}
+      showLogin();
+    }
+
+    // Load Stats
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/stats', {
+          headers: getAuthHeaders()
+        });
+        if (res.status === 401) {
+          showLogin();
+          return;
+        }
+        const data = await res.json();
+        if (data.success && data.stats) {
+          document.getElementById('stat-total').textContent = data.stats.total;
+          document.getElementById('stat-contacts').textContent = data.stats.contacts;
+          document.getElementById('stat-volunteers').textContent = data.stats.volunteers;
+          document.getElementById('stat-donations').textContent = data.stats.donations;
+        }
+      } catch (err) {
+        console.error('Stats error:', err);
+      }
+    }
+
+    // Load Submissions
+    async function loadSubmissions() {
+      const tbody = document.getElementById('submissions-tbody');
+      try {
+        const url = `/api/submissions?type=${currentFilter}&search=${encodeURIComponent(searchQuery)}`;
+        const res = await fetch(url, {
+          headers: getAuthHeaders()
+        });
+
+        if (res.status === 401) {
+          showLogin();
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.success || !data.submissions.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400">No submissions found.</td></tr>`;
+          return;
+        }
+
+        submissions = data.submissions;
+        tbody.innerHTML = submissions.map(sub => {
+          const typeBadge = {
+            inquiry: '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-teal-500/20 text-teal-300 border border-teal-500/30">Inquiry</span>',
+            contact: '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Contact</span>',
+            volunteer: '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">Volunteer</span>',
+            donation: '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30">Donation</span>',
+            newsletter: '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30">Subscriber</span>'
+          }[sub.type] || sub.type;
+
+          const dateStr = sub.createdAt ? new Date(sub.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+
+          return `
+            <tr class="hover:bg-slate-800/60 transition">
+              <td class="py-3 px-4 font-mono text-slate-400 whitespace-nowrap">${dateStr}</td>
+              <td class="py-3 px-4">${typeBadge}</td>
+              <td class="py-3 px-4">
+                <div class="font-bold text-white">${escapeHtml(sub.name || 'Subscriber')}</div>
+                <div class="text-slate-400 text-[11px] font-mono">${escapeHtml(sub.email || '-')} ${sub.phone ? '• ' + escapeHtml(sub.phone) : ''}</div>
+              </td>
+              <td class="py-3 px-4 max-w-xs truncate text-slate-300">
+                <span class="font-bold text-slate-200">${escapeHtml(sub.subject || sub.interest || sub.cause || 'Newsletter')}</span>
+                ${sub.message ? '<p class="text-slate-400 truncate text-[11px]">' + escapeHtml(sub.message) + '</p>' : ''}
+              </td>
+              <td class="py-3 px-4">
+                <select onchange="updateStatus('${escapeHtml(sub.id)}', this.value)" class="text-[11px] font-bold uppercase rounded-lg px-2 py-1 bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none cursor-pointer">
+                  <option value="new" ${sub.status === 'new' ? 'selected' : ''}>New</option>
+                  <option value="contacted" ${sub.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                  <option value="completed" ${sub.status === 'completed' ? 'selected' : ''}>Completed</option>
+                </select>
+              </td>
+              <td class="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
+                <button onclick="viewDetail('${escapeHtml(sub.id)}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 font-bold transition">View</button>
+                <button onclick="deleteSubmission('${escapeHtml(sub.id)}')" class="px-2 py-1 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 font-bold transition">Delete</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-10 text-center text-rose-400">Failed to load submissions.</td></tr>`;
+      }
+    }
+
+    async function updateStatus(id, newStatus) {
+      try {
+        await fetch(`/api/submissions/${id}`, {
+          method: 'PATCH',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ status: newStatus })
+        });
+        loadStats();
+      } catch (err) {
+        alert('Could not update status');
+      }
+    }
+
+    async function deleteSubmission(id) {
+      if (!confirm('Are you sure you want to permanently delete this submission?')) return;
+      try {
+        await fetch(`/api/submissions/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        loadStats();
+        loadSubmissions();
+      } catch (err) {
+        alert('Could not delete submission');
+      }
+    }
+
+    async function downloadExport() {
+      try {
+        const res = await fetch('/api/export', { headers: getAuthHeaders() });
+        if (res.status === 401) {
+          showLogin();
+          return;
+        }
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'panchvaktra-submissions.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Failed to download CSV export');
+      }
+    }
+
+    function viewDetail(id) {
+      const item = submissions.find(s => s.id === id);
+      if (!item) return;
+
+      document.getElementById('modal-title').textContent = `${(item.type || 'entry').toUpperCase()} — ${item.name || item.email}`;
+      document.getElementById('modal-date').textContent = new Date(item.createdAt).toLocaleString();
+
+      let detailsHtml = `
+        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-1.5 font-mono text-xs">
+          <div><strong class="text-slate-400">Email:</strong> <span class="text-emerald-400">${escapeHtml(item.email || '-')}</span></div>
+          ${item.phone ? `<div><strong class="text-slate-400">Phone:</strong> <span>${escapeHtml(item.phone)}</span></div>` : ''}
+          ${item.inquiryType ? `<div><strong class="text-slate-400">Inquiry Type:</strong> <span class="text-amber-400 font-bold">${escapeHtml(item.inquiryType)}</span></div>` : ''}
+          ${item.organization ? `<div><strong class="text-slate-400">Organization:</strong> <span>${escapeHtml(item.organization)}</span></div>` : ''}
+          ${item.subject ? `<div><strong class="text-slate-400">Subject:</strong> ${escapeHtml(item.subject)}</div>` : ''}
+          ${item.interest ? `<div><strong class="text-slate-400">Interest / Skill:</strong> ${escapeHtml(item.interest)}</div>` : ''}
+          ${item.availability ? `<div><strong class="text-slate-400">Availability:</strong> ${escapeHtml(item.availability)}</div>` : ''}
+          ${item.amount ? `<div><strong class="text-slate-400">Pledge Amount:</strong> <span class="text-rose-400 font-bold">${escapeHtml(item.amount)}</span></div>` : ''}
+          ${item.cause ? `<div><strong class="text-slate-400">Designated Cause:</strong> ${escapeHtml(item.cause)}</div>` : ''}
+        </div>
+        ${item.message ? `
+          <div>
+            <strong class="text-slate-400 block mb-1">Message Content:</strong>
+            <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 whitespace-pre-wrap font-sans text-slate-100 text-xs">${escapeHtml(item.message)}</div>
+          </div>
+        ` : ''}
+      `;
+      document.getElementById('modal-content').innerHTML = detailsHtml;
+      document.getElementById('detail-modal').classList.remove('hidden');
+      document.getElementById('detail-modal').classList.add('flex');
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.getElementById('detail-modal').classList.remove('flex');
+    }
+
+    function openChangePasswordModal() {
+      document.getElementById('change-password-form').reset();
+      document.getElementById('password-modal-error').classList.add('hidden');
+      document.getElementById('password-modal').classList.remove('hidden');
+      document.getElementById('password-modal').classList.add('flex');
+    }
+
+    function closePasswordModal() {
+      document.getElementById('password-modal').classList.add('hidden');
+      document.getElementById('password-modal').classList.remove('flex');
+    }
+
+    document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const errBox = document.getElementById('password-modal-error');
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/auth/change-password', {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          authToken = data.token;
+          alert('Owner password updated successfully!');
+          closePasswordModal();
+        } else {
+          errBox.textContent = data.error || 'Failed to update password';
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.textContent = 'Server connection error';
+        errBox.classList.remove('hidden');
+      }
+    });
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Setup filter listeners
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.className = 'filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-700';
+        });
+        btn.className = 'filter-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-500 text-slate-950 shadow-xs';
+        currentFilter = btn.dataset.type;
+        loadSubmissions();
+      });
+    });
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      loadSubmissions();
+    });
+
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+      loadStats();
+      loadSubmissions();
+    });
+
+    // Strictly show locked login view on page load (locks on reload / tab cut)
+    showLogin();
+  </script>
+</body>
+</html>
